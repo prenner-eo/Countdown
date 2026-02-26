@@ -1,27 +1,84 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Countdown</title>
   <style>
-    body { font-family: system-ui, sans-serif; padding: 2rem; }
-    #timer { font-size: 2rem; font-variant-numeric: tabular-nums; }
-    .small { color: #666; margin-top: .5rem; }
+    /* Make page fill the viewport */
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    /* Background image */
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+      /* ✅ Set your background PNG path here */
+      background-image: url("assets/background.png");
+      background-size: cover;          /* fill screen, keep aspect ratio */
+      background-position: center;     /* center the image */
+      background-repeat: no-repeat;
+      background-attachment: fixed;    /* optional; can remove on mobile if you like */
+
+      /* optional: in case image doesn't cover on some screens */
+      background-color: #000;
+    }
+
+    /* Center everything on top of the background */
+    .overlay {
+      height: 100%;
+      display: flex;
+      align-items: center;   /* vertical center */
+      justify-content: center; /* horizontal center */
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    /* A readable panel on top of the image (optional but recommended) */
+    .card {
+      text-align: center;
+      padding: 24px 28px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: #fff;
+      max-width: 90vw;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: 0.02em;
+    }
+
+    #timer {
+      font-size: clamp(32px, 6vw, 64px);
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+    }
+
+    .small {
+      margin-top: 10px;
+      opacity: 0.85;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
-  <h1>Countdown</h1>
-  <div id="timer">Lädt…</div>
-  <div class="small" id="meta"></div>
+  <div class="overlay">
+    <div class="card">
+      <h1>Countdown</h1>
+      <div id="timer">Loading…</div>
+      <div class="small" id="meta"></div>
+    </div>
+  </div>
 
   <script>
-    // ✅ Zielzeitpunkt festlegen:
-    // Variante A (empfohlen): mit Zeitzone/UTC eindeutig -> "Z" bedeutet UTC
-    const target = new Date("2026-04-22T17:00:00Z");
-
-    // Variante B: lokale Zeit des Besuchers (oft unerwünscht, weil je nach Nutzer anders)
-    // const target = new Date(2026, 11, 24, 18, 0, 0); // Monate: 0=Jan ... 11=Dez
+    // Example: fixed global moment in UTC
+    const target = new Date("2026-02-26T09:00:00Z");
 
     const el = document.getElementById("timer");
     const meta = document.getElementById("meta");
@@ -30,11 +87,10 @@
 
     function tick() {
       const now = new Date();
-      let diff = target - now; // Millisekunden
+      let diff = target - now;
 
       if (diff <= 0) {
-        el.textContent = "🎉 Es ist soweit!";
-        meta.textContent = `Ziel: ${target.toUTCString()} (UTC)`;
+        el.textContent = "🎉 It’s time!";
         clearInterval(intervalId);
         return;
       }
@@ -45,10 +101,10 @@
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
-      el.textContent = `${days} Tage ${pad(hours)} Stunden ${pad(minutes)} Minuten ${pad(seconds)} Sekunden`
+      el.textContent = `${days} Tage ${pad(hours)} Stunden ${pad(minutes)} Minuten ${pad(seconds)} Sekunden`;
     }
 
-    tick(); // sofort anzeigen
+    tick();
     const intervalId = setInterval(tick, 1000);
   </script>
 </body>
