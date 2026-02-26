@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Countdown</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 2rem; }
+    #timer { font-size: 2rem; font-variant-numeric: tabular-nums; }
+    .small { color: #666; margin-top: .5rem; }
+  </style>
+</head>
+<body>
+  <h1>Countdown</h1>
+  <div id="timer">Lädt…</div>
+  <div class="small" id="meta"></div>
+
+  <script>
+    // ✅ Zielzeitpunkt festlegen:
+    // Variante A (empfohlen): mit Zeitzone/UTC eindeutig -> "Z" bedeutet UTC
+    const target = new Date("2026-12-24T18:00:00Z");
+
+    // Variante B: lokale Zeit des Besuchers (oft unerwünscht, weil je nach Nutzer anders)
+    // const target = new Date(2026, 11, 24, 18, 0, 0); // Monate: 0=Jan ... 11=Dez
+
+    const el = document.getElementById("timer");
+    const meta = document.getElementById("meta");
+
+    function pad(n) { return String(n).padStart(2, "0"); }
+
+    function tick() {
+      const now = new Date();
+      let diff = target - now; // Millisekunden
+
+      if (diff <= 0) {
+        el.textContent = "🎉 Es ist soweit!";
+        meta.textContent = `Ziel: ${target.toUTCString()} (UTC)`;
+        clearInterval(intervalId);
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / (3600 * 24));
+      const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      el.textContent = `${days} Tage ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+      meta.textContent = `Ziel: ${target.toUTCString()} (UTC)`;
+    }
+
+    tick(); // sofort anzeigen
+    const intervalId = setInterval(tick, 1000);
+  </script>
+</body>
+</html>
