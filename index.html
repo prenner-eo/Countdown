@@ -45,8 +45,7 @@
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
-      el.textContent = `${days} Tage ${pad(hours)} Stunden ${pad(minutes)} Minuten ${pad(seconds)} Sekunden`;
-      meta.textContent = `Ziel: ${target.toUTCString()} (UTC)`;
+      el.textContent = `${days} Tage ${pad(hours)} Stunden ${pad(minutes)} Minuten ${pad(seconds)} Sekunden`
     }
 
     tick(); // sofort anzeigen
