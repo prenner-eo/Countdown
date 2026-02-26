@@ -77,7 +77,7 @@
 
   <script>
     // Example: fixed global moment in UTC
-    const target = new Date("2026-02-26T08:09:00Z");
+    const target = new Date("2026-04-22T15:00:00Z");
 
     const el = document.getElementById("timer");
     const meta = document.getElementById("meta");
@@ -100,7 +100,7 @@
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
-      el.textContent = `${days} Tage ${pad(hours)} Stunden <br> ${pad(minutes)} Minuten ${pad(seconds)} Sekunden`;
+      el.innerHTML = `${days} Tage ${pad(hours)} Stunden<br>${pad(minutes)} Minuten ${pad(seconds)} Sekunden`;
     }
 
     tick();
