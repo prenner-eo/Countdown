@@ -10,13 +10,30 @@
       margin: 0;
     }
 
-    /* ✅ Black background only */
+    /* ✅ Black background */
     body {
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: #000;
+      overflow: hidden; /* optional: prevents scrollbars if image covers */
     }
 
+    /* ✅ Fullscreen PNG in the FOREGROUND */
+    .fg-image {
+      position: fixed;
+      inset: 0;              /* top/right/bottom/left: 0 */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;     /* fill screen, keep aspect ratio */
+      object-position: center;
+      z-index: 2;            /* above text */
+      pointer-events: none;  /* clicks go through */
+      user-select: none;
+    }
+
+    /* Center content */
     .overlay {
+      position: relative;
+      z-index: 1;            /* below foreground image */
       height: 100%;
       display: flex;
       align-items: center;
@@ -25,49 +42,20 @@
       box-sizing: border-box;
     }
 
-    /* Container for image + text layers */
+    /* Readable panel */
     .card {
-      position: relative;            /* enables layering */
-      width: min(900px, 92vw);
       text-align: center;
-      color: #fff;
-    }
-
-    /* ✅ PNG layer in the foreground */
-    .fg-image {
-      display: block;
-      width: 100%;
-      height: auto;
-      z-index: 2;
-      position: relative;            /* participate in z-index */
-      pointer-events: none;          /* clicks go through (optional) */
-      user-select: none;
-    }
-
-    /* ✅ Text layer (behind the PNG) */
-    .text-layer {
-      position: absolute;
-      inset: 0;                      /* fill same area as image */
-      z-index: 1;                    /* behind PNG */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      box-sizing: border-box;
-    }
-
-    /* Optional: readable panel behind text */
-    .text-box {
-      padding: 20px 24px;
+      padding: 24px 28px;
       border-radius: 16px;
-      background: rgba(0,0,0,0.45);
+      background: rgba(0,0,0,0.55);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      max-width: 90%;
+      color: #fff;
+      max-width: 90vw;
     }
 
     #timer {
-      font-size: clamp(26px, 4.5vw, 56px);
+      font-size: clamp(32px, 6vw, 64px);
       font-variant-numeric: tabular-nums;
       font-weight: 700;
       line-height: 1.15;
@@ -81,27 +69,24 @@
   </style>
 </head>
 <body>
+
+  <!-- ✅ Foreground image fills the entire viewport -->
+  <img
+    class="fg-image"
+    src="assets/stone-wall-brick-wall-decal-hole-in-a-brick-wall-ed3ac32f9e4c7175c6f39076c9c45868.png"
+    alt=""
+  />
+
+  <!-- Text centered (behind the PNG overlay) -->
   <div class="overlay">
     <div class="card">
-      <!-- ✅ PNG in the foreground -->
-      <img
-        class="fg-image"
-        src="assets/stone-wall-brick-wall-decal-hole-in-a-brick-wall-ed3ac32f9e4c7175c6f39076c9c45868.png"
-        alt=""
-      />
-
-      <!-- ✅ Text behind the PNG -->
-      <div class="text-layer">
-        <div class="text-box">
-          <div id="timer">Loading…</div>
-          <div class="small" id="meta"></div>
-        </div>
-      </div>
+      <div id="timer">Loading…</div>
+      <div class="small" id="meta"></div>
     </div>
   </div>
 
   <script>
-    // 22.04.2026 17:00 Europe/Berlin == 15:00Z (because CEST)
+    // 22.04.2026 17:00 Europe/Berlin == 15:00Z (CEST)
     const target = new Date("2026-04-22T15:00:00Z");
 
     const el = document.getElementById("timer");
