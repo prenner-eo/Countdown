@@ -5,59 +5,72 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Countdown</title>
   <style>
-    /* Make page fill the viewport */
     html, body {
       height: 100%;
       margin: 0;
     }
 
-    /* Background image */
+    /* ✅ Black background only */
     body {
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-
-      /* ✅ Set your background PNG path here */
-      background-image: url("assets/stone-wall-brick-wall-decal-hole-in-a-brick-wall-ed3ac32f9e4c7175c6f39076c9c45868.png");
-      background-size: cover;          /* fill screen, keep aspect ratio */
-      background-position: center;     /* center the image */
-      background-repeat: no-repeat;
-      background-attachment: fixed;    /* optional; can remove on mobile if you like */
-
-      /* optional: in case image doesn't cover on some screens */
-      background-color: #000;
+      background: #000;
     }
 
-    /* Center everything on top of the background */
     .overlay {
       height: 100%;
       display: flex;
-      align-items: center;   /* vertical center */
-      justify-content: center; /* horizontal center */
+      align-items: center;
+      justify-content: center;
       padding: 24px;
       box-sizing: border-box;
     }
 
-    /* A readable panel on top of the image (optional but recommended) */
+    /* Container for image + text layers */
     .card {
+      position: relative;            /* enables layering */
+      width: min(900px, 92vw);
       text-align: center;
-      padding: 24px 28px;
+      color: #fff;
+    }
+
+    /* ✅ PNG layer in the foreground */
+    .fg-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      z-index: 2;
+      position: relative;            /* participate in z-index */
+      pointer-events: none;          /* clicks go through (optional) */
+      user-select: none;
+    }
+
+    /* ✅ Text layer (behind the PNG) */
+    .text-layer {
+      position: absolute;
+      inset: 0;                      /* fill same area as image */
+      z-index: 1;                    /* behind PNG */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    /* Optional: readable panel behind text */
+    .text-box {
+      padding: 20px 24px;
       border-radius: 16px;
       background: rgba(0,0,0,0.45);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      color: #fff;
-      max-width: 90vw;
-    }
-
-    h1 {
-      margin: 0 0 12px;
-      font-size: clamp(28px, 4vw, 44px);
-      letter-spacing: 0.02em;
+      max-width: 90%;
     }
 
     #timer {
-      font-size: clamp(32px, 6vw, 64px);
+      font-size: clamp(26px, 4.5vw, 56px);
       font-variant-numeric: tabular-nums;
       font-weight: 700;
+      line-height: 1.15;
     }
 
     .small {
@@ -70,13 +83,25 @@
 <body>
   <div class="overlay">
     <div class="card">
-      <div id="timer">Loading…</div>
-      <div class="small" id="meta"></div>
+      <!-- ✅ PNG in the foreground -->
+      <img
+        class="fg-image"
+        src="assets/stone-wall-brick-wall-decal-hole-in-a-brick-wall-ed3ac32f9e4c7175c6f39076c9c45868.png"
+        alt=""
+      />
+
+      <!-- ✅ Text behind the PNG -->
+      <div class="text-layer">
+        <div class="text-box">
+          <div id="timer">Loading…</div>
+          <div class="small" id="meta"></div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    // Example: fixed global moment in UTC
+    // 22.04.2026 17:00 Europe/Berlin == 15:00Z (because CEST)
     const target = new Date("2026-04-22T15:00:00Z");
 
     const el = document.getElementById("timer");
@@ -90,6 +115,7 @@
 
       if (diff <= 0) {
         el.textContent = "🎉 Showtime!";
+        meta.textContent = "";
         clearInterval(intervalId);
         return;
       }
@@ -100,7 +126,8 @@
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
-      el.innerHTML = `${days} Tage<br> ${pad(hours)} Stunden<br>${pad(minutes)} Minuten<br> ${pad(seconds)} Sekunden`;
+      el.innerHTML =
+        `${days} Tage<br>${pad(hours)} Stunden<br>${pad(minutes)} Minuten<br>${pad(seconds)} Sekunden`;
     }
 
     tick();
