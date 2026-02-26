@@ -100,7 +100,7 @@
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
-      el.innerHTML = `${days} Tage ${pad(hours)} Stunden<br>${pad(minutes)} Minuten ${pad(seconds)} Sekunden`;
+      el.innerHTML = `${days} Tage<br> ${pad(hours)} Stunden<br>${pad(minutes)} Minuten<br> ${pad(seconds)} Sekunden`;
     }
 
     tick();
